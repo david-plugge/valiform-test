@@ -1,17 +1,17 @@
 <script lang="ts" context="module">
-	import { createForm } from '$lib';
+	import { createFormActionValidation } from '$lib';
 	import * as v from 'valibot';
 
-	export const myForm = createForm(
-		'my-form',
-		v.object({
+	export const myForm = createFormActionValidation({
+		name: 'my-form',
+		schema: v.object({
 			username: v.string(),
 			age: v.optional(v.number(), 18),
 			dates: v.array(v.date()),
 
 			agb: v.boolean()
 		})
-	);
+	});
 </script>
 
 <pre>{JSON.stringify($myForm, null, 2)}</pre>
@@ -20,15 +20,15 @@
 	<div>
 		<input type="text" name="username" bind:value={$myForm.fields.username} />
 
-		{#if $myForm.errors.username}
-			<p>{$myForm.errors.username[0]}</p>
+		{#if $myForm.errors?.nested.username}
+			<p>{$myForm.errors.nested.username[0]}</p>
 		{/if}
 	</div>
 
 	<div>
 		<input type="text" name="age" use:myForm.validate={'age'} bind:value={$myForm.fields.age} />
-		{#if $myForm.errors.age}
-			<p>{$myForm.errors.age[0]}</p>
+		{#if $myForm.errors?.nested.age}
+			<p>{$myForm.errors.nested.age[0]}</p>
 		{/if}
 	</div>
 
